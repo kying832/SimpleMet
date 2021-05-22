@@ -1,0 +1,2 @@
+rootProject.name = "SimpleMet"
+include ':app'
