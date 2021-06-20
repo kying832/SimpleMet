@@ -6,7 +6,9 @@ plugins {
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
-
+    buildFeatures {
+        viewBinding = true
+    }
     defaultConfig {
         applicationId "com.example.simplemet"
         minSdkVersion 19
@@ -44,4 +46,5 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.android.databinding:viewbinding:4.0.1'
 }
