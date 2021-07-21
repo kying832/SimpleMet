@@ -18,6 +18,10 @@ class MainViewModel : ViewModel() {
     }
 
     fun resetMet(){
-        _tempo.value = 96
+        _tempo.value = 40
+    }
+
+    fun setTempo(v: Int){
+        _tempo.value = v
     }
 }

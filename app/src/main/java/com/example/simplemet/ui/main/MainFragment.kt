@@ -1,6 +1,7 @@
 package com.example.simplemet.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,8 @@ import com.example.simplemet.databinding.MainFragmentBinding
 import com.example.simplemet.databinding.MainFragmentBinding.inflate
 
 
+const val MIN: Int =  0
+const val MAX: Int = 45
 class MainFragment : Fragment() {
     companion object {
         fun newInstance() = MainFragment()
@@ -27,20 +30,35 @@ class MainFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         _binding = inflate(inflater, container, false)
 
-        val minValue = 40
-        val maxValue = 220
+        setNumberPicker()
 
-        val initTempoPicker: Array<String> = Array((maxValue - minValue) / 4 + 1) { (it * 4 + 40).toString() }
-        binding.tempoPicker.minValue = 0
-        binding.tempoPicker.maxValue = initTempoPicker.size - 1
-        binding.tempoPicker.setDisplayedValues(initTempoPicker)
-
-        binding.tempoPicker.wrapSelectorWheel = true
-        //viewModel.tempo.value?.let { binding.tempoPicker.value = it }
         
         return binding.root
-        //return inflater.inflate(R.layout.main_fragment, container, false)
+
     }
+
+    private fun setNumberPicker(){
+        binding.tempoPicker.setFormatter { getTempoFromIndex(it).toString() }
+
+        binding.tempoPicker.minValue = MIN
+        binding.tempoPicker.maxValue = MAX //should be 45 values total from 40 - 220
+
+        binding.tempoPicker.wrapSelectorWheel = true
+
+        binding.tempoPicker.setOnValueChangedListener { _, _, newVal ->
+            viewModel.setTempo(getTempoFromIndex(newVal))
+            Log.d("New Tempo: ", "${viewModel.tempo.value}")
+        }
+
+    }
+        /*
+        * let x = the index in the background of the tempoPicker.
+        * Return value is the actual tempo to be used for the metronome (i.e. 96 bpm)
+        * formula is y = (x+1) * 4 + minValue
+        * */
+        fun getTempoFromIndex(x: Int): Int{
+            return x * 4 + 40
+        }
 
 
 
