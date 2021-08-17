@@ -12,12 +12,15 @@ class MainViewModel : ViewModel() {
     init{
         resetMet()
     }
-
+/*
+* Computes time delay between beats or frequency based on beats per minute
+* returns time in seconds.
+* */
     fun getFrequency(): Double {
         return 1.0/ tempo.value!!.times(1.0 / 60.0)
     }
 
-    fun resetMet(){
+    private fun resetMet(){
         _tempo.value = 40
     }
 
