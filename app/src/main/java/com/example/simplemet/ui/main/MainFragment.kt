@@ -11,10 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.simplemet.databinding.MainFragmentBinding
 import com.example.simplemet.databinding.MainFragmentBinding.inflate
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 
 
 const val MIN: Int = 0
@@ -31,6 +28,7 @@ class MainFragment : Fragment() {
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var soundpool: SoundPool
+    val scope = CoroutineScope(Dispatchers.Default)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,12 +74,9 @@ class MainFragment : Fragment() {
         binding.onOffSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 Toast.makeText(activity, "Switch ON", Toast.LENGTH_LONG).show()
-                runBlocking {
-                    job = launch{
-                        while(true)
-                        {
-                            tempoLog()
-                        }
+                job = scope.launch {
+                    while (isChecked) {
+                        tempoLog()
                     }
                 }
             } else {
@@ -90,7 +85,6 @@ class MainFragment : Fragment() {
             }
         }
     }
-
 
 
     /*
@@ -102,7 +96,8 @@ class MainFragment : Fragment() {
         return x * TEMPO_INCREMENT + MIN_TEMPO
     }
 
-    suspend fun tempoLog(){
+
+    private suspend fun tempoLog() {
         delay(viewModel.getFrequency().toLong())
         Log.d("New Tempo: ", "${viewModel.tempo.value}")
     }
